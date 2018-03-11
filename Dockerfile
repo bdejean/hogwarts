@@ -29,6 +29,10 @@ ENV APP_ENV=prod \
     QUEUE_DRIVER=array \
     SEED_DATABASE=false
 
+RUN a2dissite 000-default.conf
+RUN apt-get install -y vim
+RUN apt-get clean
+
 # Note : the mysql database is sometime long to init
 ADD docker/wait-for-it.sh /usr/local/bin/
 ADD docker/start.sh /

@@ -1,7 +1,9 @@
 #!/bin/bash
 
+set -x
+
 IMAGE_NAME='hogwarts'
-BUILD_IMAGE=false
+BUILD_IMAGE=true
 MIGRATE_DATABASE=false
 SEED_DATABASE=true
 
@@ -30,8 +32,15 @@ while [[ ! -z $1 ]]; do
 done
 
 if [[ -z $DB_DATA_DIR ]]; then
-    echo "Please give a directory for mysql database" >&2
-    exit 1
+    if [ ! -d db ]; then
+	if ! mkdir db; then
+		echo "Cannot create db dir"
+		exit 1
+	fi
+    fi
+
+    DB_DATA_DIR=$(realpath db)
+    echo "Default db dir to $DB_DATA_DIR"
 fi
 
 if [[ -z $(docker images -q $IMAGE_NAME 2> /dev/null) ]] || $BUILD_IMAGE; then
@@ -50,7 +59,7 @@ echo $DB_CONTAINER
 
 DB_HOST=`docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $DB_CONTAINER`
 
-docker run -i -d -p 80:80 \
+docker run -i -d -p 44080:80 \
        -v /etc/localtime:/etc/localtime:ro \
        -e APACHE_SERVERNAME="$APACHE_SERVERNAME" \
        -e APP_ENV="$APP_ENV" \
@@ -62,4 +71,5 @@ docker run -i -d -p 80:80 \
        -e DB_USERNAME="$DB_USERNAME" \
        -e DB_PASSWORD="$DB_PASSWORD" \
        -e SEED_DATABASE="$SEED_DATABASE" \
+       -e ADMIN_PASSWORD=secret \
        "$IMAGE_NAME"
