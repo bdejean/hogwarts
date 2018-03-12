@@ -47,7 +47,8 @@ if [[ -z $(docker images -q $IMAGE_NAME 2> /dev/null) || $BUILD_IMAGE ]]; then
     docker build -t "$IMAGE_NAME" . || exit 1
 fi
 
-DB_CONTAINER=`docker run -d -p $DB_PORT:3306 \
+# Assume that mysql and hogwarts will run on the same host
+DB_CONTAINER=`docker run -d -p 127.0.0.1:$DB_PORT:3306 \
        -v "$DB_DATA_DIR:/var/lib/mysql" \
        -e MYSQL_RANDOM_ROOT_PASSWORD=yes \
        -e MYSQL_ONETIME_PASSWORD=yes \
