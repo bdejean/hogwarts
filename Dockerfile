@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install git, mysql, curl and composer
 RUN apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get install -y git curl vim && \
+    apt-get install -y git curl vim-tiny php5-sqlite && \
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ENV APACHE_DOCUMENTROOT=/var/www/hogwarts
