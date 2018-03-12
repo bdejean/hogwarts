@@ -29,16 +29,15 @@ run chown -R root ${APACHE_DOCUMENTROOT}
 RUN chmod -R a+rX ${APACHE_DOCUMENTROOT}
 RUN chown www-data ${APACHE_DOCUMENTROOT}/storage/logs
 
+RUN mkdir -m 1777 /var/lib/db
+
 # Lumen arguments
 # Don't forget to give APP_KEY and DB_HOST
 
 ENV APP_ENV=prod \
     APP_DEBUG=false \
     APP_KEY= \
-    DB_CONNECTION=mysql \
-    DB_PORT=3306 \
-    DB_DATABASE=hogwarts \
-    DB_USERNAME=hogwarts \
+    DB_CONNECTION=sqlite \
     CACHE_DRIVER=array \
     QUEUE_DRIVER=array \
     SEED_DATABASE=false
