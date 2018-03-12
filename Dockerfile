@@ -36,7 +36,8 @@ ENV APP_ENV=prod \
     SEED_DATABASE=false
 
 RUN a2dissite 000-default.conf
-RUN apt-get install -y vim
+
+RUN apt-get autoremove
 RUN apt-get clean
 
 # Note : the mysql database is sometime long to init
