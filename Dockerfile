@@ -2,18 +2,24 @@
 
 FROM jacksoncage/apache:latest
 
+ENV DEBIAN_FRONTEND noninteractive
+
 # Install git, mysql, curl and composer
 RUN apt-get update && \
-    apt-get install git curl -y && \
+    apt-get -y dist-upgrade && \
+    apt-get install -y git curl vim && \
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Clone repo and set document root to it
-RUN cd /var/www \
-    && git clone https://github.com/Hugal31/hogwarts.git \
-    && cd hogwarts \
+ENV APACHE_DOCUMENTROOT=/var/www/hogwarts
+
+# Copy repo and install composer
+COPY . ${APACHE_DOCUMENTROOT}
+RUN rm -rf ${APACHE_DOCUMENTROOT}/.git*
+RUN chmod -R a+rX ${APACHE_DOCUMENTROOT}
+
+RUN cd ${APACHE_DOCUMENTROOT} \
     && composer install \
     && chown www-data storage/logs
-ENV APACHE_DOCUMENTROOT=/var/www/hogwarts
 
 # Lumen arguments
 # Don't forget to give APP_KEY and DB_HOST
