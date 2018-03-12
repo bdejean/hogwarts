@@ -43,7 +43,7 @@ if [[ -z $DB_DATA_DIR ]]; then
     echo "Default db dir to $DB_DATA_DIR"
 fi
 
-if [[ -z $(docker images -q $IMAGE_NAME 2> /dev/null) ]] || $BUILD_IMAGE; then
+if [[ -z $(docker images -q $IMAGE_NAME 2> /dev/null) || $BUILD_IMAGE ]]; then
     docker build -t "$IMAGE_NAME" . || exit 1
 fi
 
