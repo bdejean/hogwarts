@@ -25,6 +25,8 @@ RUN cd ${APACHE_DOCUMENTROOT} \
 RUN rm -rf $COMPOSER_CACHE_DIR
 
 USER root
+run chown -R root ${APACHE_DOCUMENTROOT}
+RUN chmod -R a+rX ${APACHE_DOCUMENTROOT}
 RUN chown www-data ${APACHE_DOCUMENTROOT}/storage/logs
 
 # Lumen arguments
