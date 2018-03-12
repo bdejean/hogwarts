@@ -5,7 +5,7 @@ set -x
 IMAGE_NAME='hogwarts'
 BUILD_IMAGE=true
 MIGRATE_DATABASE=false
-SEED_DATABASE=true
+SEED_DATABASE=false
 
 APACHE_SERVERNAME=hogwarts.lan
 
