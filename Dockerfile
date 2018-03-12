@@ -15,11 +15,17 @@ ENV APACHE_DOCUMENTROOT=/var/www/hogwarts
 # Copy repo and install composer
 COPY . ${APACHE_DOCUMENTROOT}
 RUN rm -rf ${APACHE_DOCUMENTROOT}/.git*
-RUN chmod -R a+rX ${APACHE_DOCUMENTROOT}
+RUN chown -R www-data ${APACHE_DOCUMENTROOT}
 
+USER www-data
+ENV COMPOSER_CACHE_DIR /tmp/composer_cache_dir
+RUN mkdir $COMPOSER_CACHE_DIR
 RUN cd ${APACHE_DOCUMENTROOT} \
-    && composer install \
-    && chown www-data storage/logs
+    && composer install
+RUN rm -rf $COMPOSER_CACHE_DIR
+
+USER root
+RUN chown www-data ${APACHE_DOCUMENTROOT}/storage/logs
 
 # Lumen arguments
 # Don't forget to give APP_KEY and DB_HOST
