@@ -59,5 +59,4 @@ RUN a2dissite 000-default.conf
 RUN apt-get autoremove
 RUN apt-get clean
 
-# Note : the mysql database is sometime long to init
-ADD docker/start.sh /
+# Inherit from /apache for start.
