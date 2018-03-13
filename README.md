@@ -27,3 +27,13 @@ Simple Hogwarts' houses points hourglasses for Epitech's Pool
 
 
 Don't forget to update the COPY if you add top level files/dirs to be installed in the image.
+
+
+## Create the database
+
+	ADMIN_EMAIL=benoit@localhost ADMIN_PASSWORD=secret ./start_docker.sh --db-dir ./db --db-name hogwarts.db --create-db
+
+## Start Docker instance
+
+	.//start_docker.sh --db-dir ./db --db-name hogwarts.db
+

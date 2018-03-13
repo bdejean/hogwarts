@@ -60,5 +60,4 @@ RUN apt-get autoremove
 RUN apt-get clean
 
 # Note : the mysql database is sometime long to init
-ADD docker/wait-for-it.sh /usr/local/bin/
 ADD docker/start.sh /
