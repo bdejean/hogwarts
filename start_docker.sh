@@ -52,6 +52,10 @@ if [[ -z $DB_DIR ]]; then
     fi
 fi
 
+if [[ $(stat -c '%a' $DB_DIR/$DB_NAME) != *777 ]]; then
+	echo "$DB_DIR/$DB_NAME needs to be world-writable for docker"
+fi
+
 if [[ -z $(docker images -q $IMAGE_NAME 2> /dev/null) || $BUILD_IMAGE ]]; then
     docker build -t "$IMAGE_NAME" . || exit 1
 fi
@@ -67,6 +71,8 @@ if [ $CREATE_DB = 'true' ]; then
 	echo 'Please set env var ADMIN_PASSWORD'
 	exit 1
     fi
+
+    [ ! -d $DB_DIR ] && mkdir -m 777 $DB_DIR
 
     docker run -i -p $HTTP_PORT:80 \
 	   -v /etc/localtime:/etc/localtime:ro \
