@@ -45,7 +45,7 @@ if [[ -z $DB_PATH ]]; then
     usage
 fi
 
-DB_NAME=$(basename $DB_NAME)
+DB_NAME=$(basename $DB_PATH)
 DB_DIR=$(dirname $DB_PATH)
 
 DB_DIR_REAL=$(realpath $DB_DIR)
