@@ -13,8 +13,15 @@ APACHE_SERVERNAME=hogwarts.lan
 APP_ENV=local # TODO Change
 APP_DEBUG=true # TODO Change
 APP_KEY=
+DB_PATH=
 DB_DIR=
 DB_NAME=
+
+function usage()
+{
+    echo "Usage: $0 --db /path/to/db.db [--build] [--create-db]" >/dev/stderr
+    exit 1
+}
 
 
 while [[ ! -z $1 ]]; do
@@ -25,40 +32,40 @@ while [[ ! -z $1 ]]; do
 	'--create-db')
 	    CREATE_DB=true
 	    ;;
-	'--db-dir')
+	'--db')
 	    shift
-	    DB_DIR="$1"
-	    ;;
-	'--db-name')
-	    shift
-	    DB_NAME="$1"
+	    DB_PATH="$1"
 	    ;;
     esac
     shift
 done
 
+
+if [[ -z $DB_PATH ]]; then
+    usage
+fi
+
+DB_NAME=$(basename $DB_NAME)
+DB_DIR=$(dirname $DB_PATH)
+
 DB_DIR_REAL=$(realpath $DB_DIR)
 echo "Expaning $DB_DIR to $DB_DIR_REAL"
 DB_DIR=$DB_DIR_REAL
 
-if [[ -z $DB_DIR ]]; then
-    if [ ! -d $DB_DIR ]; then
-	echo "$DB_DIR doest not exist, create it!"
-	exit 1
-    fi
-    if [ ! -f $DB_DIR/$DB_NAME ]; then
-	echo "$DB_NAME doest not exist, use --create first!"
-	exit 1
-    fi
+if [[ $CREATE_DB != "true" && ! -f $DB_PATH ]]; then
+    echo "$DB_PATH doest not exist, use --create first!" >/dev/stderr
+    usage
 fi
 
-if [[ $(stat -c '%a' $DB_DIR/$DB_NAME) != *777 ]]; then
-	echo "$DB_DIR/$DB_NAME needs to be world-writable for docker"
+if [[ $(stat -c '%a' $DB_PATH) != *777 ]]; then
+	echo "$DB_PTATHneeds to be world-writable for docker"
 fi
+
 
 if [[ -z $(docker images -q $IMAGE_NAME 2> /dev/null) || $BUILD_IMAGE ]]; then
     docker build -t "$IMAGE_NAME" . || exit 1
 fi
+
 
 if [ $CREATE_DB = 'true' ]; then
 
