@@ -54,7 +54,12 @@ ENV APP_ENV=prod \
     QUEUE_DRIVER=array \
     SEED_DATABASE=false
 
-RUN a2dissite 000-default.conf
+RUN a2dissite 000-default.conf 001-docker.conf
+
+COPY docker/042-hogwarts.conf /etc/apache2/sites-available/
+COPY keys/hogwarts.* /etc/apache2/ssl/
+RUN a2enmod ssl
+RUN a2ensite 042-hogwarts.conf
 
 RUN apt-get autoremove
 RUN apt-get clean

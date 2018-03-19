@@ -5,6 +5,7 @@ set -x
 IMAGE_NAME='hogwarts'
 HTTP_PORT=44080
 BUILD_IMAGE=true
+HTTPS_PORT=44043
 MIGRATE_DATABASE=false
 CREATE_DB=false
 
@@ -96,7 +97,7 @@ if [ $CREATE_DB = 'true' ]; then
 	   	      && cd $APACHE_DOCUMENTROOT && php artisan migrate && php artisan db:seed \
 		      && ls -l $DB_DATABASE && echo $DB_DATABASE created and seeded'
 else
-    docker run -i -d -p $HTTP_PORT:80 \
+    docker run -i -d -p $HTTP_PORT:80 -p $HTTPS_PORT:443 \
 	   -v /etc/localtime:/etc/localtime:ro \
 	   -v "$DB_DIR:/var/lib/db" \
 	   -e APACHE_SERVERNAME="$APACHE_SERVERNAME" \
